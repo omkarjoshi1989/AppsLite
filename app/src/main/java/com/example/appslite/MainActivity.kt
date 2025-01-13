@@ -16,9 +16,11 @@ import android.graphics.drawable.Drawable
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
@@ -50,18 +52,23 @@ fun AppList(apps: List<AppInfo>) {
 @Composable
 fun AppItem(app: AppInfo) {
     val context = LocalContext.current
-    Row(modifier = Modifier.padding(start = 16.dp,bottom=8.dp).clickable {
-        openApp(context, app.packageName)
-    }) {
+    Row(modifier = Modifier
+        .padding(start = 16.dp, bottom = 8.dp)
+        .clickable {
+            openApp(context, app.packageName)
+        }) {
         Image(
             bitmap = app.icon.toBitmap(32, 32).asImageBitmap(),
             contentDescription = null,
             modifier = Modifier.size(32.dp)
         )
-        Text(text = "${app.name}")
-        //Text(text = " (${app.packageName})")
+        Column(modifier = Modifier.padding(start = 8.dp)) {
+            Text(text = app.name)
+            Text(text = "(${app.packageName})", style = MaterialTheme.typography.bodySmall)
+        }
     }
 }
+
 fun openApp(context: Context, packageName: String) {
     val intent = context.packageManager.getLaunchIntentForPackage(packageName)
     if (intent != null) {
